@@ -492,9 +492,9 @@ async function getPlaytime(interaction) {
         }
 
         // Calculate today, week, and month playtimes
-        const playtimeToday = player.playtime_today || 0;
-        const playtimeWeek = weekPlayer.playtime_week || 0;
-        const playtimeMonth = monthPlayer.playtime_month || 0;
+        const playtimeToday = player.playtime || 0;
+        const playtimeWeek = weekPlayer.playtime || 0;
+        const playtimeMonth = monthPlayer.playtime || 0;
 
         const hoursToday = Math.floor(playtimeToday / 3600);
         const minutesToday = Math.floor((playtimeToday % 3600) / 60);
@@ -506,9 +506,9 @@ async function getPlaytime(interaction) {
         const minutesMonth = Math.floor((playtimeMonth % 3600) / 60);
 
         await interaction.followUp(`🕒 **${playerName}**, you have played for:
-            - **${hoursToday} hours ${minutesToday.toString().padStart(2, '0')} minutes** today 🏃‍♂️
-            - **${hoursWeek} hours ${minutesWeek.toString().padStart(2, '0')} minutes** this week 📅
-            - **${hoursMonth} hours ${minutesMonth.toString().padStart(2, '0')} minutes** this month 🌙`);
+        **${hoursToday} hours ${minutesToday.toString().padStart(2, '0')} minutes** today 🏃‍♂️
+        **${hoursWeek} hours ${minutesWeek.toString().padStart(2, '0')} minutes** this week 📅
+        **${hoursMonth} hours ${minutesMonth.toString().padStart(2, '0')} minutes** this month 🌙`);
     } catch (err) {
         console.error('Error fetching playtime:', err);
         await interaction.followUp('⚠️ Could not fetch playtime. Try again later.');
