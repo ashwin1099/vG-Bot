@@ -476,39 +476,46 @@ async function getPlaytime(interaction) {
     try {
         await interaction.deferReply();  // Start the deferred reply
 
-        const collection = db.collection(config.COLLECTION_NAME);
+        // Fetch player data from the collections
+        const playerCollection = db.collection('players');   // Main player collection
+        const weekCollection = db.collection('players_week'); // Weekly playtime collection
+        const monthCollection = db.collection('players_month'); // Monthly playtime collection
 
-        const player = await collection.findOne({ name: playerName });
+        // Fetch the player data for today, week, and month
+        const player = await playerCollection.findOne({ name: playerName });
+        const weekPlayer = await weekCollection.findOne({ name: playerName });
+        const monthPlayer = await monthCollection.findOne({ name: playerName });
 
-        if (!player || typeof player.playtime !== 'number') {
-            await interaction.followUp(`❌ No playtime data found for **${playerName}**.`);  // Follow-up with the final reply
+        if (!player || !weekPlayer || !monthPlayer) {
+            await interaction.followUp(`❌ No playtime data found for **${playerName}**.`);  // Handle error if player not found
             return;
         }
 
-        const playtimeSeconds = player.playtime;
-        const hours = Math.floor(playtimeSeconds / 3600);
-        const minutes = Math.floor((playtimeSeconds % 3600) / 60);
+        // Calculate today, week, and month playtimes
+        const playtimeToday = player.playtime_today || 0;
+        const playtimeWeek = weekPlayer.playtime_week || 0;
+        const playtimeMonth = monthPlayer.playtime_month || 0;
 
-        await interaction.followUp(`🕒  **${playerName}**, you have played for **${hours} hours ${minutes.toString().padStart(2, '0')} minutes** today.`);  // Format minutes with leading zero if necessary
+        const hoursToday = Math.floor(playtimeToday / 3600);
+        const minutesToday = Math.floor((playtimeToday % 3600) / 60);
+
+        const hoursWeek = Math.floor(playtimeWeek / 3600);
+        const minutesWeek = Math.floor((playtimeWeek % 3600) / 60);
+
+        const hoursMonth = Math.floor(playtimeMonth / 3600);
+        const minutesMonth = Math.floor((playtimeMonth % 3600) / 60);
+
+        await interaction.followUp(`🕒 **${playerName}**, you have played for:
+            - **${hoursToday} hours ${minutesToday.toString().padStart(2, '0')} minutes** today 🏃‍♂️
+            - **${hoursWeek} hours ${minutesWeek.toString().padStart(2, '0')} minutes** this week 📅
+            - **${hoursMonth} hours ${minutesMonth.toString().padStart(2, '0')} minutes** this month 🌙`);
     } catch (err) {
         console.error('Error fetching playtime:', err);
         await interaction.followUp('⚠️ Could not fetch playtime. Try again later.');
     }
 }
 
-const express = require('express');
-const app = express();
-const PORT = 8000; // The port your hosting expects (8000)
 
-// Simple health check endpoint
-app.get('/', (req, res) => {
-    res.status(200).send('OK');
-});
-
-// Start the HTTP server
-app.listen(PORT, () => {
-    console.log(`✅ Health check server running on port ${PORT}`);
-});
 
 
 
