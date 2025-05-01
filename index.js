@@ -21,7 +21,7 @@ const config = {
     OFFLINE_COLOR: '#ff0000',
     ICON_URL: 'https://i.postimg.cc/zBrffQy6/vg.png',
     MAX_PLAYERS_PER_PAGE: 15,
-    MONGODB_URI: process.env.MONGODB_URI,
+    MONGODB_URI: 'mongodb+srv://vg-bot:ashwinjr10@vg-bot.eypjth3.mongodb.net/?retryWrites=true&w=majority&appName=vG-Bot',
     DB_NAME: 'valiant',
     COLLECTION_NAME: 'players'
 };
