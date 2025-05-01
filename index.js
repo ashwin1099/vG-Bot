@@ -496,6 +496,20 @@ async function getPlaytime(interaction) {
     }
 }
 
+const express = require('express');
+const app = express();
+const PORT = 8000; // The port your hosting expects (8000)
+
+// Simple health check endpoint
+app.get('/', (req, res) => {
+    res.status(200).send('OK');
+});
+
+// Start the HTTP server
+app.listen(PORT, () => {
+    console.log(`✅ Health check server running on port ${PORT}`);
+});
+
 
 
 // Log the bot in
